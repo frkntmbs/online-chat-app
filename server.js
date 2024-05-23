@@ -18,12 +18,12 @@ app.prepare().then(() => {
     console.log('User connected: ' + socket.id);
 
     socket.on('join-room', (data) => {
-      socket.join(data.id);
-      console.log('User joined room: ' + data.user.userName);
+      socket.join(data.room);
+      console.log('User joined room: ' + data.user.userName + ' ' + data.room);
     });
 
     socket.on('send-message', (data) => {
-      io.to(data.id).emit('receive-message', data);
+      io.to(data.room).emit('receive-message', data);
     });
 
   });

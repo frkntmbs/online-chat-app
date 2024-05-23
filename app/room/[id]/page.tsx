@@ -21,12 +21,20 @@ function Room({ params }: Readonly<{ params: { id: string } }>) {
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState<Message[]>([]);
 
+	const getCurrentTime = () => {
+		const date = new Date();
+		const hours = String(date.getHours()).padStart(2, "0");
+		const minutes = String(date.getMinutes()).padStart(2, "0");
+		return `${hours}:${minutes}`;
+	};
+
 	const sendMessage = () => {
+		if (!message) return;
 		socket.emit("send-message", {
 			room: id,
 			user: user,
 			message: message,
-			time: new Date().toLocaleTimeString().replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3"),
+			time: getCurrentTime(),
 		});
 
 		setMessage("");
