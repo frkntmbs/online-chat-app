@@ -2,6 +2,14 @@
 
 This project is developed using Next.js, Tailwind CSS, and Zustand to facilitate real-time communication with SocketIO. By leveraging Next.js's custom server, the need for a separate project for SocketIO is eliminated, allowing all functionalities to be contained within a single project.
 
+<p align="center">
+  <img src="https://github.com/frkntmbs/online-chat-app/assets/54813762/d2ef308c-bb5a-4ccd-8c95-9af1a46d6026" width="266.67" />
+  <img src="https://github.com/frkntmbs/online-chat-app/assets/54813762/9f644c9b-670a-4868-a875-0a7a9049d1ef" width="266.67" /> 
+</p>
+
+
+
+
 ## Technologies
 
 - **Next.js:** A web application framework based on React.
