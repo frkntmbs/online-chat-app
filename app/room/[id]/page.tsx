@@ -46,9 +46,7 @@ function Room({ params }: Readonly<{ params: { id: string } }>) {
 		socket.on("receive-message", (data: Message) => {
 			setMessages((prev) => [...prev, data]);
 			if (data.user.id !== user.id) {
-				if (document.visibilityState === "hidden") {
-					sendNotification(id, data.message, data.user);
-				}
+				sendNotification(id, data.message, data.user);
 			}
 		});
 	}, [socket]);

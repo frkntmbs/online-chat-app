@@ -47,11 +47,13 @@ const useNotification = () => {
         }
 
         if (currentPermission === "granted") {
-            new Notification(`${user.userName} sent a message in room:${room}`, {
-                body: message,
-                icon: "/favicon.ico",
-            });
             playNotificationSound();
+            if (document.visibilityState === "hidden") {
+                new Notification(`${user.userName} sent a message in room:${room}`, {
+                    body: message,
+                    icon: "/favicon.ico",
+                });
+            }
         } else {
             console.error("Notification permission not granted");
         }
