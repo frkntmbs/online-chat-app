@@ -7,9 +7,6 @@ This project is developed using Next.js, Tailwind CSS, and Zustand to facilitate
   <img src="https://github.com/frkntmbs/online-chat-app/assets/54813762/9f644c9b-670a-4868-a875-0a7a9049d1ef" width="266.67" /> 
 </p>
 
-
-
-
 ## Technologies
 
 - **Next.js:** A web application framework based on React.
@@ -31,7 +28,7 @@ This project is developed using Next.js, Tailwind CSS, and Zustand to facilitate
     npm install
     ```
 
-3. Start the server:
+3. Start the development server:
 
     ```bash
     npm run dev
@@ -42,6 +39,10 @@ This project is developed using Next.js, Tailwind CSS, and Zustand to facilitate
 ## Usage
 
 This project enables users to communicate in real-time. When users connect to the application, they can instantly see messages sent by other users and share their own messages.
+
+## Adding Web Notifications and Notification Sound
+
+To enhance user experience, web notifications and notification sounds have been added to this project. Notifications will be triggered for new messages received while the user is not focused on the application.
 
 ## Contributing
 
