@@ -1,4 +1,5 @@
 "use client";
+import useNotification from "@/hooks/useNotification";
 import useSocketStore from "@/stores/socket";
 import useUserStore from "@/stores/user";
 import { redirect } from "next/navigation";
@@ -8,6 +9,7 @@ function Room({ params }: Readonly<{ params: { id: string } }>) {
 	const { id } = params;
 	const { socket } = useSocketStore();
 	const { user } = useUserStore();
+	const { sendNotification } = useNotification();
 
 	if (user.id === "") redirect("/");
 
@@ -43,6 +45,11 @@ function Room({ params }: Readonly<{ params: { id: string } }>) {
 	useEffect(() => {
 		socket.on("receive-message", (data: Message) => {
 			setMessages((prev) => [...prev, data]);
+			if (data.user.id !== user.id) {
+				if (document.visibilityState === "hidden") {
+					sendNotification(id, data.message, data.user);
+				}
+			}
 		});
 	}, [socket]);
 
