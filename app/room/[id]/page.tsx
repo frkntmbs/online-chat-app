@@ -46,16 +46,23 @@ function Room({ params }: Readonly<{ params: { id: string } }>) {
 		});
 	}, [socket]);
 
+	useEffect(() => {
+		const messagesElement = document.querySelector(".messages-area") as HTMLElement;
+		if (messagesElement) {
+			messagesElement.scrollTop = messagesElement.scrollHeight;
+		}
+	}, [messages]);
+
 	return (
-		<div className="md:w-[90%] lg:w-1/2 2xl:w-1/3 h-screen flex flex-col gap-4 items-center justify-center mx-4 sm:mx-6 md:mx-auto">
-			<div className="flex flex-col bg-gray-700 border border-gray-600 w-full h-[calc(100vh-50px)] lg:h-5/6 rounded-2xl overflow-y-auto">
+		<div className="md:w-[90%] lg:w-1/2 2xl:w-1/3 h-[100svh] flex flex-col gap-4 items-center justify-center mx-4 sm:mx-6 md:mx-auto">
+			<div className="flex flex-col bg-gray-700 border border-gray-600 w-full h-[calc(100svh-50px)] lg:h-5/6 rounded-2xl overflow-y-auto">
 				<div className="p-4 bg-zinc-800 rounded-t-lg">
 					<div className="flex gap-2 items-center">
 						<h1 className="text-white text-lg">Room: {id}</h1>
 					</div>
 				</div>
 				<div className="grow overflow-y-hidden ">
-					<div className="py-4 px-4 flex flex-col gap-5 overflow-y-auto overflow-x-visible h-full max-h-full scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-700">
+					<div className="messages-area py-4 px-4 flex flex-col gap-5 overflow-y-auto overflow-x-visible h-full max-h-full scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-700">
 						{messages.map((msg, index) => (
 							<div key={index} className={`flex flex-col gap-2 max-w-[90%] ${msg.user.id === user.id ? "items-end ms-auto" : "items-start me-auto"}`}>
 								<div className={`flex flex-col justify-center rounded-[10px] p-2.5 ${msg.user.id === user.id ? "bg-indigo-600 text-white rounded-br-none" : "bg-gray-600 text-white rounded-bl-none"}`}>
