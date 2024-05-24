@@ -34,7 +34,7 @@ const useNotification = () => {
         audio.play().catch(error => console.error("Error playing notification sound", error));
     };
 
-    const sendNotification = useCallback(async (room: string, message: string, user: User) => {
+    const sendNotification = useCallback(async (room: string, title: string, message?: string) => {
         if (typeof window === 'undefined' || !("Notification" in window)) {
             console.error("This browser does not support desktop notification");
             return;
@@ -49,7 +49,7 @@ const useNotification = () => {
         if (currentPermission === "granted") {
             playNotificationSound();
             if (document.visibilityState === "hidden") {
-                new Notification(`${user.userName} sent a message in room:${room}`, {
+                new Notification(title, {
                     body: message,
                     icon: "/favicon.ico",
                 });

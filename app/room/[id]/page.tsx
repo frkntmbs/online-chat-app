@@ -21,9 +21,9 @@ function Room({ params }: Readonly<{ params: { id: string } }>) {
 	}, [id]);
 
 	const [message, setMessage] = useState("");
-	const [messages, setMessages] = useState<Message[]>([]);
+	const [messages, setMessages] = useState<Array<Message | SystemEvent>>([]);
 
-	const getCurrentTime = () => {
+	const getCurrentTime = (): string => {
 		const date = new Date();
 		const hours = String(date.getHours()).padStart(2, "0");
 		const minutes = String(date.getMinutes()).padStart(2, "0");
@@ -46,8 +46,14 @@ function Room({ params }: Readonly<{ params: { id: string } }>) {
 		socket.on("receive-message", (data: Message) => {
 			setMessages((prev) => [...prev, data]);
 			if (data.user.id !== user.id) {
-				sendNotification(id, data.message, data.user);
+				sendNotification(id, `${data.user.userName} sent a message`, data.message);
 			}
+		});
+
+		socket.on("receive-system-event", (data: SystemEvent) => {
+			setMessages((prev) => [...prev, data]);
+
+			sendNotification(id, data.eventMessage);
 		});
 	}, [socket]);
 
@@ -68,15 +74,31 @@ function Room({ params }: Readonly<{ params: { id: string } }>) {
 				</div>
 				<div className="grow overflow-y-hidden ">
 					<div className="messages-area py-4 px-4 flex flex-col gap-5 overflow-y-auto overflow-x-visible h-full max-h-full scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-700">
-						{messages.map((msg, index) => (
-							<div key={index} className={`flex flex-col gap-2 max-w-[90%] ${msg.user.id === user.id ? "items-end ms-auto" : "items-start me-auto"}`}>
-								<div className={`flex flex-col justify-center rounded-[10px] p-2.5 ${msg.user.id === user.id ? "bg-indigo-600 text-white rounded-br-none" : "bg-gray-600 text-white rounded-bl-none"}`}>
-									{msg.user.id !== user.id && <span className="text-xs opacity-80">{msg.user.userName}</span>}
-									<p className="text-md">{msg.message}</p>
-									<span className={`text-xs opacity-80 ${msg.user.id === user.id ? "ms-auto" : ""}`}>{msg.time}</span>
-								</div>
-							</div>
-						))}
+						{messages.map((msg, index) => {
+							if ((msg as Message).user) {
+								const message = msg as Message;
+								return (
+									<div key={index} className={`flex flex-col gap-2 max-w-[90%] ${message.user.id === user.id ? "items-end ms-auto" : "items-start me-auto"}`}>
+										<div className={`flex flex-col justify-center rounded-[10px] p-2.5 ${message.user.id === user.id ? "bg-indigo-600 text-white rounded-br-none" : "bg-gray-600 text-white rounded-bl-none"}`}>
+											{message.user.id !== user.id && <span className="text-xs opacity-80">{message.user.userName}</span>}
+											<p className="text-md">{message.message}</p>
+											<span className={`text-xs opacity-80 ${message.user.id === user.id ? "ms-auto" : ""}`}>{message.time}</span>
+										</div>
+									</div>
+								);
+							} else {
+								const systemEvent = msg as SystemEvent;
+								return (
+									<div key={index} className="flex flex-col gap-1 items-center">
+										<span className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs bg-gray-600 text-white">
+											<span className={`size-1.5 inline-block rounded-full ${systemEvent.type === "join" ? "bg-green-500" : "bg-red-500"}`}></span>
+											<span className="opacity-80">{systemEvent.eventMessage}</span>
+										</span>
+										<span className="text-[10px] opacity-40">{systemEvent.time}</span>
+									</div>
+								);
+							}
+						})}
 					</div>
 				</div>
 				<div className="p-4 rounded-b-lg mt-auto">
